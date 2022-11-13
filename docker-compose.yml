@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  regionA:
+    image: alialmahari/geode-server
+    hostname: geode.local
+    ports:
+      - "11235:11235"
+      - "1199:1199"
+      - "12480:12480"
+
+    environment:
+      GEODE_BIND_ADDRESS: geode.local
+      GEODE_HOSTNAME_FOR_CLIENTS: geode.local
+      GEODE_PORT: 12480
+      GEODE_PORT_LOCATORS: geode2.local[11236],geode.local[11235]
+      GEODE_START_LOCATORS: geode.local[11235]
+      GEODE_LOCATOR_NAME: locator1
+      JMX_MANAGER_HOSTNAME_FOR_CLIENTS: geode.local
+      JMX_MANAGER_PORT: 1199
+      ENABLE_CLUSTER_CONFIGURATION : false
+      REMOTE_LOCATORS: geode2.local[11236],geode.local[11235]
+      REMOTE_DISTRIBUTED_SYSTEM_ID: 2
+      DISTRIBUTED_SYSTEM_ID: 1
+      HOSTNAME_FOR_SENDERS: geode.local
+
+  regionB:
+    image: alialmahari/geode-server
+    hostname: geode2.local
+    ports:
+      - "11236:11236"
+      - "1198:1198"
+      - "12481:12481"
+
+    environment:
+      GEODE_BIND_ADDRESS: geode2.local
+      GEODE_HOSTNAME_FOR_CLIENTS: geode2.local
+      GEODE_PORT: 12481
+      GEODE_PORT_LOCATORS: geode2.local[11236],geode.local[11235]
+      GEODE_START_LOCATORS: geode2.local[11236]
+      GEODE_LOCATOR_NAME: locator2
+      JMX_MANAGER_HOSTNAME_FOR_CLIENTS: geode2.local
+      JMX_MANAGER_PORT: 1198
+      ENABLE_CLUSTER_CONFIGURATION : true
+      REMOTE_LOCATORS: geode2.local[11236],geode.local[11235]
+      REMOTE_DISTRIBUTED_SYSTEM_ID: 1
+      DISTRIBUTED_SYSTEM_ID: 2
+      HOSTNAME_FOR_SENDERS: geode2.local

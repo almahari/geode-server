@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cache xmlns="http://geode.apache.org/schema/cache"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://geode.apache.org/schema/cache http://geode.apache.org/schema/cache/cache-1.0.xsd"
+       version="1.0" lock-lease="120" lock-timeout="60" search-timeout="300"
+       is-server="true" copy-on-read="false">
+
+<!--    manual-start="true"-->
+    <gateway-sender id="GwSender1" enable-persistence="true"
+                     batch-size="100" batch-time-interval="1000"
+                    remote-distributed-system-id="${REMOTE_DISTRIBUTED_SYSTEM_ID}" parallel="true" />
+<!--    manual-start="false"-->
+    <gateway-receiver  start-port="${GATEWAY_RECEIVER_START_PORT}" end-port="${GATEWAY_RECEIVER_END_PORT}"  hostname-for-senders="${HOSTNAME_FOR_SENDERS}"/>
+
+
+    <cache-server bind-address="${BIND_ADDRESS}" hostname-for-clients="${HOSTNAME_FOR_CLIENTS}" port="${PORT}"
+                  max-connections="${MAX_CONNECTIONS}" maximum-time-between-pings="${MAX_TIME_BETWEEN_PINGS}"/>
+
+    <region name="SquareRoots" refid="PARTITION">
+        <region-attributes >
+
+            <key-constraint>java.lang.Long</key-constraint>
+            <value-constraint>java.lang.Long</value-constraint>
+            <cache-loader>
+                <class-name>org.example.ServerExample$SquareRootsCacheLoader</class-name>
+            </cache-loader>
+        </region-attributes>
+    </region>
+
+    <region name="Numbers" refid="REPLICATE_PERSISTENT">
+        <region-attributes>
+            <key-constraint>java.lang.Long</key-constraint>
+            <value-constraint>java.lang.Long</value-constraint>
+            <cache-loader>
+                <class-name>org.example.ServerExample$NumbersLoader</class-name>
+            </cache-loader>
+            <cache-writer>
+                <class-name>org.example.ServerExample$ExampleCacheWriter</class-name>
+            </cache-writer>
+        </region-attributes>
+        
+    </region>
+
+    <region name="Parent" refid="REPLICATE"></region>
+
+    <region name="ExRegion1" refid="PARTITION_REDUNDANT_PERSISTENT">
+        <region-attributes gateway-sender-ids="GwSender1" />
+    </region>
+
+    <region name="ExRegion2" refid="PARTITION_REDUNDANT_PERSISTENT" />
+
+</cache>

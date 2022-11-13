@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<client-cache xmlns="http://geode.apache.org/schema/cache"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://geode.apache.org/schema/cache http://geode.apache.org/schema/cache/cache-1.0.xsd" version="1.0">
+
+    <pool name="serverPool" free-connection-timeout="5000" idle-timeout="5000" max-connections="100"
+          min-connections="1" ping-interval="5000" read-timeout="2000" retry-attempts="1" subscription-enabled="true"
+          thread-local-connections="false">
+        <locator host="geode.local" port="11235"/>
+        <locator host="geode2.local" port="11236"/>
+    </pool>
+
+    <region name="SquareRoots">
+        <region-attributes  pool-name="serverPool" refid="PROXY"/>
+    </region>
+
+    <region name="Numbers">
+        <region-attributes  pool-name="serverPool" refid="PROXY"/>
+    </region>
+
+</client-cache>
